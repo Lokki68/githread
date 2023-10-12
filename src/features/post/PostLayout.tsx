@@ -18,7 +18,7 @@ export const PostLayout = ({className, user, postId, createdAt, children}: PostL
 
   return (
     <div className={clsx('flex w-full flex-row items-start p-4', className)}>
-      <Avatar>
+      <Avatar size='default'>
         {user.image ? <AvatarImage src={user.image} alt={user.username}/> : null}
         <AvatarFallback>
           {user.username.slice(0, 2).toUpperCase()}

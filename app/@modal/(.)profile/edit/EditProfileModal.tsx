@@ -5,9 +5,10 @@ import {ProfileForm, ProfileFormType} from "@/app/profile/edit/ProfilForm";
 import {User} from "@prisma/client";
 import {usePathname, useRouter} from "next/navigation";
 import {Dialog, DialogContent} from "@/components/ui/dialog";
+import {UserEdit} from "@/src/query/user.query";
 
 export const EditProfileModal = ({user, editProfile}: {
-  user: User,
+  user: UserEdit,
   editProfile: (values: ProfileFormType) => Promise<string | void>
 }) => {
   const router = useRouter()

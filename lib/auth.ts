@@ -1,10 +1,10 @@
-import GithubProvider from 'next-auth/providers/github'
-import {env} from "@/lib/env";
-import {PrismaAdapter} from "@next-auth/prisma-adapter";
-import {prisma} from "@/lib/prisma";
-import {getServerSession} from "next-auth";
+import {PrismaAdapter} from '@next-auth/prisma-adapter';
+import {AuthOptions, getServerSession} from 'next-auth';
+import GithubProvider from 'next-auth/providers/github';
+import {env} from './env';
+import {prisma} from './prisma';
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -16,21 +16,21 @@ export const authOptions = {
           username: profile.login,
           name: profile.name,
           email: profile.email,
-          image: profile.avatar_url
-        }
-      }
-    })
+          image: profile.avatar_url,
+        };
+      },
+    }),
   ],
   callbacks: {
     session({session, user}) {
-      if (!session?.user) return session
-      session.user.id = user.id
-      return session
-    }
-  }
-}
+      if (!session?.user) return session;
+      session.user.id = user.id;
+      return session;
+    },
+  },
+};
 
 export const getAuthSession = async () => {
-  const session = await getServerSession(authOptions)
-  return session
-}
+  const session = await getServerSession(authOptions);
+  return session;
+};
