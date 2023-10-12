@@ -1,15 +1,8 @@
 import {prisma} from "@/lib/prisma";
 import {Prisma} from "@prisma/client";
 
-export const getLatestPosts = async (userId?: string) => await prisma.post.findMany({
-  where: {
-    parentId: null
-  },
-  take: 20,
-  orderBy: {
-    createdAt: 'desc'
-  },
-  select: {
+export const postSelectQuery = (userId?: string) => (
+  {
     id: true,
     content: true,
     createdAt: true,
@@ -34,7 +27,42 @@ export const getLatestPosts = async (userId?: string) => await prisma.post.findM
         replies: true
       }
     }
+  } satisfies Prisma.PostSelect
+)
+export const getLatestPosts = async (userId?: string) => await prisma.post.findMany({
+  where: {
+    parentId: null
+  },
+  take: 20,
+  orderBy: {
+    createdAt: 'desc'
+  },
+  select: postSelectQuery(userId)
+})
+
+export const getPostView = (id: string, userId?: string) => prisma.post.findUnique({
+  where: {
+    id
+  },
+  select: {
+    ...postSelectQuery(userId),
+    replies: {
+      select: postSelectQuery(userId)
+    },
+    parent: {
+      select: postSelectQuery(userId)
+    }
   }
 })
+
+export const getPost = (id: string, userId?: string) => prisma.post.findUnique({
+  where: {
+    id
+  },
+  select: {
+    ...postSelectQuery(userId)
+  }
+})
+
 
 export type PostHome = Prisma.PromiseReturnType<typeof getLatestPosts>[number]
